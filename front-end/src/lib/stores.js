@@ -2,6 +2,7 @@ import { writable } from "svelte/store";
 import supabase from "$lib/db"
 const { data: { user_ } } = await supabase.auth.getSession()
 export let session_user = writable( user_||0)
+export let pointsInfo = writable({})
 console.log(user_)
 
 export let userInfo = writable(0);

@@ -36,7 +36,7 @@
             <tr>
               <td></td>
               <td>{item.id}</td>
-              <td><a style="font-weight:bold" target="_blank" href = {item.link}>{item.title}</a></td>
+              <td><a style="font-weight:bold" target="_blank" href = {item.source=="Codeblaze"?"/problem/"+item.pID:item.link}>{item.title}</a></td>
               <td>
                 {#if item.type == "description"}
                     <img style = "width:16px;height:16px" src="https://img.icons8.com/external-inipagistudio-mixed-inipagistudio/64/external-documentation-business-process-inipagistudio-mixed-inipagistudio.png"/>

@@ -14,7 +14,7 @@
 <div class = "size-100 items-center justify-center flex min-h-screen">
     <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
       <form class="card-body">
-        <img src = "/favicon-32x32.png" class = "self-center" style="width:50px;height:50px;">
+        <img src = "/favicon-32x32.png" class = "self-center" style="width:32px;height:32px;">
         <div class="form-control">
           <label class="label">
             <span class="label-text">Email</span>

@@ -5,6 +5,7 @@
         authHandlers,
         session_user,
         userInfo,
+        pointsInfo
     } from "$lib/stores";
     import { onMount } from "svelte";
     import { invalidateAll, goto } from "$app/navigation";
@@ -17,12 +18,15 @@
         "/register",
         "/terms",
     ];
-    let SESSION_USER, USER_INFO, user_sub;
+    let SESSION_USER, USER_INFO, user_sub,POINT_INFO;
     const unsubscribe = session_user.subscribe((value) => {
         SESSION_USER = value;
     });
     const unsubscribe2 = userInfo.subscribe((value) => {
         USER_INFO = value;
+    });
+    const unsubscribe3 = pointsInfo.subscribe((value) => {
+        POINT_INFO = value;
     });
     onMount(() => {
         const { data } = supabase.auth.onAuthStateChange(
@@ -48,6 +52,7 @@
                 }
                 if (session && currentPath == "/logout") {
                     authHandlers.logout();
+                    console.log("Initiate logout")
                 }
                 // console.log(event, session);
                 if (event === "INITIAL_SESSION") {
@@ -101,7 +106,15 @@
                                 },
                             )
                             .subscribe();
+                        let { pointsInfo3, total_sub } = await supabase.from('submissions').select('*', { count: 'exact',head:true }).eq("user",session.user.id)
+                        // let {pointsInfo2, total_wa,e_rror2}  = await supabase.from('submissions').select('*', { count: 'exact',head:true }).eq("user",session.user.id).eq("runner_output.verdict","Wrong Answer")
+                        let total_wa = 0
+                        console.log(pointsInfo3,total_sub)
+                        pointsInfo.update(function (state) {
+                            return { ...state,total_sub:total_sub,total_wa:total_wa };
+                        })
                     }, 0);
+                    
                 } else if (event === "SIGNED_IN") {
                     // goto("/dashboard");
                 } else if (event === "SIGNED_OUT") {

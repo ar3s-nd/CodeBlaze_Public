@@ -12,6 +12,7 @@
     export let problemID = 7;
     export let view_past_sub = true;
     export let view_expln = true;
+    export let one_v_oneID = -1;
     let pData;
     let SESSION_USER, USER_INFO, user_sub, sub_status, sub_listen;
     const unsubscribe = session_user.subscribe((value) => {
@@ -80,6 +81,7 @@
                     code_lang: selectedlang,
                     user: SESSION_USER.user.id,
                     problemID: problemID,
+                    one_v_oneID: one_v_oneID,
                 },
             ])
             .select();

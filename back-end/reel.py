@@ -3,9 +3,9 @@ from supabase import create_client, Client
 from realtime.connection import Socket
 from queue import Queue
 from threading import Thread
-SUPABASE_URL="dzbcjgkznubfkonozlze.supabase.co"
-SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6YmNqZ2t6bnViZmtvbm96bHplIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxMTE5MTk4MiwiZXhwIjoyMDI2NzY3OTgyfQ.jIWbu9cRz5zCInc_K2YxpAITpFW41EL4u2EC3M7jGls"
-
+SUPABASE_URL="REDACTED"
+SUPABASE_KEY="REDACTED"
+from datetime import datetime
 import subprocess
 import time
 import psutil
@@ -27,7 +27,7 @@ def run_python(filename, input_data, timeout, mem_lim):
     current_memory = 0
 
     try:
-        execution_process.communicate(bytes(input_data, 'utf-8'),timeout = 0.1)
+        execution_process.communicate(bytes(input_data, 'utf-8'),timeout = 0.0005)
     except Exception as e:
         print(e)
         pass    
@@ -61,7 +61,7 @@ def run_python(filename, input_data, timeout, mem_lim):
     # return 0, 0, 0, 0
 
 def run_cpp(filename, input_data, timeout, mem_lim):
-    compilation_process = subprocess.Popen(['g++', filename, '-o', 'compiled_cpp'], 
+    compilation_process = subprocess.Popen(['g++', filename, '-o', 'compiled_cpp.exe'], 
                                            stderr = subprocess.PIPE)
     _, compilation_errors = compilation_process.communicate()
     if compilation_process.returncode:
@@ -78,7 +78,7 @@ def run_cpp(filename, input_data, timeout, mem_lim):
     time_taken = 0
 
     try:
-        execution_process.communicate(bytes(input_data, 'utf-8'),timeout = 0)
+        execution_process.communicate(bytes(input_data, 'utf-8'),timeout = 0.0005)
     except Exception as e:
         pass    
     while True:
@@ -267,6 +267,20 @@ def worker3(comQueue):
     while True:
         output = comQueue.get()
         response = supabase.table('submissions').update({'ex_status':"COMPLETE","runner_output":output['runner_output']}).eq("id",str(output["id"])).execute()
+        if (output['runner_output']['verdict']=="Accepted"):
+            if (output['one_v_oneID']!=-1):
+                response4 = supabase.rpc('update_1v1_row',{"winner_":output['user'],"id_":output['one_v_oneID']}).execute()
+            response2 = supabase.table('users').select("*").eq("uuid",output['user']).execute()
+            u_solved_problems = response2.data[0]['solved_problem']
+            print(u_solved_problems)
+            flag = 0
+            for u in u_solved_problems:
+                if u['id'] == output['problemID']:
+                    flag = 1
+                    break
+            if (flag==0):
+                u_solved_problems.append({'id':output['problemID'],'date':datetime.now().strftime("%d/%m/%Y %H:%M:%S"),'points':1,'subID':output['id']})
+                response = supabase.table('users').update({'solved_problem':u_solved_problems,'points':response2.data[0]['points']+1}).eq("uuid",output["user"]).execute()
         print("Submitting",response)
 
 t1 = Thread(target=worker1, args=(submissionQueue, ))
