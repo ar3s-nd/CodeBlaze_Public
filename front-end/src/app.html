@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="%sveltekit.assets%/favicon-32x32.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Codeblaze</title>
+	%sveltekit.head%
+	<!-- JQuerySupport For SummerNote-->
+	<script src="https://code.jquery.com/jquery-3.6.3.slim.min.js"
+		integrity="sha384-bX7tuwViPEjy88JZEAaUe+FHOLZ9a9syCt8Z8UJ1sDbfwEIKdcFyHhW3yVPdFhd1"
+		crossorigin="anonymous"></script>
+
+	<!-- SummerNote-->
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+	<script src = "https://unpkg.co/gsap@3/dist/gsap.min.js"></script>
+	<script src = "https://unpkg.com/gsap@3/dist/Draggable.min.js"></script>
+	<!-- <script src = "https://assets.codepen.io/16327/InertiaPlugin.min.js"></script> -->
+</head>
+
+<body data-sveltekit-preload-data="hover">
+	<div style="display: contents">%sveltekit.body%</div>
+</body>
+<script>
+	$(document).ready(function () {
+		$('.summernote').summernote({
+			toolbar: [
+				['style', ['style']],
+				['font', ['bold', 'italic', 'underline', 'clear']],
+				['fontname', ['fontname']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['height', ['height']],
+				['table', ['table']],
+				['insert', ['link', 'picture', 'hr']],
+				['view', ['fullscreen', 'codeview']],
+				['help', ['help']]
+			],
+		});
+	});
+	function getHTML(id) {
+		return $("#" + id).summernote('code')
+	}
+	function setHTML(id, html) {
+		$("#" + id).summernote('code', html);
+	}
+</script>
+<style>
+	/* width */
+	::-webkit-scrollbar {
+	  width: 10px;
+	}
+	
+	/* Track */
+	::-webkit-scrollbar-track {
+	  background: #1f2937;
+	}
+	
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+	  background: #38B6FF;
+	}
+	
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+	  background: #FFDE59;
+	}
+	</style>
+</html>
