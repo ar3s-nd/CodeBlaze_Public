@@ -63,31 +63,53 @@ app.load('https://prod.spline.design/NGaxQTs2AbwUvQQC/scene.splinecode');
   </div>
 </div>
 
-<div id = "reviews" class="carousel carousel-center p-4 space-x-4 bg-neutral rounded-box" style = "width: 50vw; margin-left: 25vw; margin-bottom:5vw; height: 30vw;min-width:350px;min-height:200px">
+<div id = "reviews" class="carousel carousel-center p-4 space-x-4 bg-neutral rounded-box" style = "width: 50vw; margin-left: 25vw; height: 30vw;min-width:350px;min-height:200px">
   <div class = 'carousel-item'>
     <div class="card lg:card-side bg-base-100 shadow-xl" >
       <div class="card-body" style = "width: 48vw ">
-        <p style = 'font-size: 28px'>"An immersive platform that seamlessly guides your coding journey while offering thrilling challenges, ensuring continuous growth and excitement."</p>
-        <p style = 'font-size: 28px; align-items: right;'>-R Ricky Roger</p>
+        <p style = 'font-size: 28px; height:1vw'>"An immersive platform that seamlessly guides your coding journey while offering thrilling challenges, ensuring continuous growth and excitement."</p>
+        <div align = 'right'>
+          <div class="w-24 mask mask-squircle" >
+            <img src="man2.jpg" height = '200' width = '200'alt = 'Paul Eduardo'>
+          </div>
+          <p style = 'font-size: 28px; ;'>-Paul Eduardo</p>
+        </div>        
       </div>
     </div>
   </div>
-  <div class = 'carousel-item'>
+  <div class = 'carousel-item w-full' id = 'i2'>
     <div class="card lg:card-side bg-base-100 shadow-xl" >
       <div class="card-body" style = "width: 48vw ">
-        NOICE
+        <p style = 'font-size: 28px; height:1vw'>"A fantastic platform that revolutionizes the way we approach coding, offering insightful roadmaps and engaging challenges."</p>
+        <div align = 'right'>
+          <div class="w-24 mask mask-squircle">
+            <img src="man1.png" alt = 'Mark Chase' height = '200' width = '200'>
+          </div>
+          <p style = 'font-size: 28px; text-align: right;'>-Mark Chase</p>
+        </div> 
       </div>
     </div>
   </div>
-  <div class = 'carousel-item'>
+  <div class = 'carousel-item w-full' id = 'i3'>
     <div class="card lg:card-side bg-base-100 shadow-xl" >
       <div class="card-body" style = "width: 48vw ">
-        NOICE
+        <p style = 'font-size: 28px; height:1vw'>"A fantastic platform that revolutionizes the way we approach coding, offering insightful roadmaps and engaging challenges."</p>
+        <div align = 'right'>
+          <div class="w-24 mask mask-squircle">
+            <img src="woman1.jpeg" alt = 'Great Thomas' height = '200' width = '200'>
+          </div>
+          <p style = 'font-size: 28px; text-align: right;'>-Greta Thomas</p>
+        </div> 
       </div>
     </div>
   </div>
 </div>
 
+<div class="flex justify-center w-full py-2 gap-2" style = 'height: 5vw'>
+  <a href="#i1" class="btn btn-xs">1</a> 
+  <a href="#i2" class="btn btn-xs">2</a> 
+  <a href="#i3" class="btn btn-xs">3</a> 
+</div>
 
 <footer class="footer footer-center p-10 bg-primary text-primary-content">
   <aside>

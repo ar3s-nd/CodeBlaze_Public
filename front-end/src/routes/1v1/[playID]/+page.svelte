@@ -29,6 +29,7 @@
         console.log(playInfo_)
     });
     function updatePlayInfo(playInfo) {
+        console.log(playInfo)
         if (playInfo == undefined) {
             async function _() {
                 let { data, error } = await supabase
@@ -40,7 +41,7 @@
                 // playInfo_ = data[0];
                 console.log(playInfo_);
             play_listen = supabase
-            .channel("player-playxx"+SESSION_USER.user.id)
+            .channel("player-playxx"+SESSION_USER.user.id+playID)
             .on(
                 "postgres_changes",
                 {
@@ -139,10 +140,11 @@
                                 .eq("id", playID)
                                 .select();
                         }, 0);
-    
+                        clearInterval(timerInterval);
+                        
                         play_Info.update(function(state){return undefined});
                         console.log("1",playInfo_)
-                        clearInterval(timerInterval);
+                        unsubscribe3();
                     }
                 }, 1000);
             } else {
@@ -174,11 +176,12 @@
     onDestroy(()=>{
     try{
         console.log("destoryed")
-        supabase.removeChannel('player-playxx'+SESSION_USER.user.id)
+        supabase.removeChannel('player-playxx'+SESSION_USER.user.id+playID)
     }catch(e){
                 
     }
     try{
+        unsubscribe3();
         console.log("nuked")
                 play_Info.update(function(state){return undefined});
                 console.log("1",playInfo_)
