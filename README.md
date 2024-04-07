@@ -1,6 +1,7 @@
 
-# Codeblaze
+# ![Codeblaze](https://github.com/ar3s-nd/CodeBlaze_Public/assets/64828294/b65b474a-943a-4135-81e9-1d444ead0698)
 An All-Feature integrated platform where coders across the learning curve, can learn, hone their skills, and test themselves.  
+
 
 
 
@@ -16,7 +17,9 @@ An All-Feature integrated platform where coders across the learning curve, can l
 
 
 ## Problem Statement
-The absence of an online coding platform featuring 1v1 duels deprives learners of a dynamic environment where they can apply their coding skills under time constraints, hindering their ability to experience real-time problem-solving and competitive learning opportunities.## Features
+The absence of an online coding platform featuring 1v1 duels deprives learners of a dynamic environment where they can apply their coding skills under time constraints, hindering their ability to experience real-time problem-solving and competitive learning opportunities.
+
+## Features
 #### Dashboard (/dashboard)
 - Top 10 players and their points on the global leaderboard.
 - Graphical representation of different types of Submissions made by the user, (AC, WA, TLE, RE, CE)
