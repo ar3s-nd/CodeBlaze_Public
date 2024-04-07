@@ -20,7 +20,7 @@ app.load('https://prod.spline.design/NGaxQTs2AbwUvQQC/scene.splinecode');
     </div>
   </div>
 
-<div class="hero min-h-screen bg-base-400">
+<div class="hero min-h-screen bg-base-400" style="height:100%">
   <div class="hero-content flex-col lg:flex-row-reverse" style="width:100%;height:100%;justify-content:center;">
     <div id = "canvas3" style="width:50%; height:100%;">
       <canvas id = "canvas3d"></canvas>
