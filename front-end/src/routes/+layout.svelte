@@ -10,6 +10,7 @@
     import { onMount } from "svelte";
     import { invalidateAll, goto } from "$app/navigation";
     import supabase from "$lib/db";
+    import { SvelteToast } from '@zerodevx/svelte-toast';
     const nonAuthRoutes = [
         "/",
         "/aboutus",
@@ -28,9 +29,11 @@
     const unsubscribe3 = pointsInfo.subscribe((value) => {
         POINT_INFO = value;
     });
+    let seized = false;
     onMount(() => {
         const { data } = supabase.auth.onAuthStateChange(
             async (event, session) => {
+                seized = localStorage.getItem("seized")
                 session_user.update(function (state) {
                     return { ...state, ...session };
                 });
@@ -103,16 +106,26 @@
                                     userInfo.update(function (state) {
                                         return { ...payload.new };
                                     });
+                                    if (USER_INFO.username == "seized_prank_1234"){
+                                        localStorage.setItem("seized",true)
+                                    }
+                                    seized = localStorage.getItem("seized")
                                 },
                             )
                             .subscribe();
-                        let { pointsInfo3, total_sub } = await supabase.from('submissions').select('*', { count: 'exact',head:true }).eq("user",session.user.id)
-                        // let {pointsInfo2, total_wa,e_rror2}  = await supabase.from('submissions').select('*', { count: 'exact',head:true }).eq("user",session.user.id).eq("runner_output.verdict","Wrong Answer")
-                        let total_wa = 0
-                        console.log(pointsInfo3,total_sub)
+                        // let { pointsInfo3, total_sub } = await supabase.from('submissions').select('*', { count: 'exact',head:true }).eq("user",session.user.id)
+                        // // let {pointsInfo2, total_wa,e_rror2}  = await supabase.from('submissions').select('*', { count: 'exact',head:true }).eq("user",session.user.id).eq("runner_output.verdict","Wrong Answer")
+                        // let total_wa = 0
+                        // console.log(pointsInfo3,total_sub)
+                        // pointsInfo.update(function (state) {
+                        //     return { ...state,total_sub:total_sub,total_wa:total_wa };
+                        // })
+                        let p = await supabase.rpc('get_all_count',{user_id_:session.user.id})
+                        console.log(p,data,error)
                         pointsInfo.update(function (state) {
-                            return { ...state,total_sub:total_sub,total_wa:total_wa };
+                            return { ...state,...p.data,};
                         })
+                        console.log(POINT_INFO)
                     }, 0);
                     
                 } else if (event === "SIGNED_IN") {
@@ -131,7 +144,7 @@
         );
     });
 </script>
-
+<SvelteToast />
 <div class="toast toast-top toast-end">
     {#each toastList as toast}
         <div
@@ -169,6 +182,10 @@
         </div>
     {/each}
 </div>
+{#if seized == "true"}
+    <img src = "seize-prank.png" style="width:100vw;height:100vh;top:0;position:fixed;left:0;">
+{:else}
 <div out:blur={{ duration: 0 }} in:blur={{ duration: 300 }}>
     <slot />
 </div>
+{/if}

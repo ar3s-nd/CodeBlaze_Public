@@ -91,23 +91,23 @@
 </script>
 
 <NavBar></NavBar>
-<div class="flex flex-row" style="width:100vw;height:100%;">
-  <div class="card w-96 bg-base-100 shadow-xl">
+<div class="flex flex-row justify-center" style="width:100vw;height:40%;color:#1f2937;margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
+  <div class="font-bold card w-96 bg-primary shadow-black bg-cover bg-[url('https://img.freepik.com/premium-photo/beautiful-blue-background-that-shades-from-light-dark-concept-sky-air-sea_71793-40.jpg')]" style="margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
     <div class="card-body">
       <h2 class="card-title">Blind</h2>
       <p>Blind Duel with someone from around the world</p>
       <div class="card-actions justify-end">
-        <button class="btn btn-primary" on:click={dbdb}>Go.</button>
+        <button class="btn btn-warning shadow-md shadow-black" on:click={dbdb}>Go.</button>
       </div>
     </div>
   </div>
-  <div class="card w-96 bg-base-100 shadow-xl">
+  <div class="font-bold card w-96 bg-primary shadow-black bg-cover bg-[url('https://img.freepik.com/premium-photo/beautiful-blue-background-that-shades-from-light-dark-concept-sky-air-sea_71793-40.jpg')]" style="margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
     <div class="card-body">
       <h2 class="card-title">Private</h2>
       <p>1v1 Duel with a Friend</p>
       <div class="card-actions justify-end">
         <button
-          class="btn btn-primary"
+          class="btn btn-warning shadow-md shadow-black"
           on:click={function () {
             goto("/1v1/private");
           }}>Go.</button

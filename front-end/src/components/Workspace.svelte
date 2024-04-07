@@ -56,7 +56,7 @@
         let { data, error } = await supabase
             .from("submissions")
             .select("id,runner_output")
-            .eq("user",SESSION_USER.user.id)
+            .eq("user_id",SESSION_USER.user.id)
             .eq("problemID", problemID);
         console.log(data)
         past_submission = data;
@@ -79,7 +79,7 @@
                     ex_status: "WAITING",
                     runner_output: {},
                     code_lang: selectedlang,
-                    user: SESSION_USER.user.id,
+                    user_id: SESSION_USER.user.id,
                     problemID: problemID,
                     one_v_oneID: one_v_oneID,
                 },
@@ -237,7 +237,9 @@
             <div id="editor" style="height: 70%;max-height:50vh"></div>
             <div class="divider"></div>
             <div id="result" style="height: 30%;max-height:50vh">
-                {#if sub_status != null}
+                {#if sub_running == true}
+                    [Note] Your code is getting executed, please wait for a few seconds. 
+                {:else if sub_status != null}
                     <span class="text-xs"
                         >Submission {sub_status.subID} Complete</span
                     ><br />
@@ -263,9 +265,7 @@
                         <span class="text-base"
                             >stderr: {sub_status.runner_output.error}</span
                         ><br />
-                    {/if}
-                {:else if sub_running == true}
-                     [Note] Your code is getting executed, please wait for a few seconds.        
+                    {/if}      
                 {:else}
                     [Note] Please make a Submission to see submission details.
                 {/if}

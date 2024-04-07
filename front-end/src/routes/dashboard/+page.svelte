@@ -9,6 +9,7 @@
         authHandlers,
         userInfo,
     } from "$lib/stores";
+    import { goto } from "$app/navigation";
     let session,POINT_INFO;
     const unsubscribe4 = session_user.subscribe((val)=>{
         session = val;
@@ -35,11 +36,12 @@
         problem_solved+=1;
     });;
 	
-	let ctx,chart;
-	let chartCanvas;
+	let ctx,chart,chart2,ctx2;
+	let chartCanvas,chartCanvas2;
     $: console.log(chartValues,chartLabels)
-	onMount(async (promise) => {
-		    $: ctx = document.getElementById("myChart")?.getContext('2d');
+  async function fder(events){
+    try{
+      $: ctx = chartCanvas?.getContext('2d');
 			chart = new Chart(ctx, {
 				type: 'line',
                 responsive:true,
@@ -52,122 +54,126 @@
 								data: chartValues
 						}]
 				}
-		})});
+		})}catch(e){
 
-    // Create parent div
-    onMount(async()=>{
-        const div = document.createElement('div');
-        div.classList.add('overflow-x-auto');
+    }
+    try{
+      ctx2= chartCanvas2?.getContext('2d');
+			chart2 = new Chart(ctx2, {
+				type: 'pie',
+                responsive:true,
+				data: {
+						labels: ["Correct Answer","Wrong Answer","Time Limit Exceeded","Runtime Error","Compilation Error"],
+						datasets: [{
+								label: 'Points',
+								// backgroundColor: 'rgb(255, 99, 132)',
+								// borderColor: 'rgb(255, 99, 132)',
+								data: [POINT_INFO.accepted_count,POINT_INFO.wa_count,POINT_INFO.tle_count,POINT_INFO.re_count,POINT_INFO.ce_count]
+						}]
+				}
+		})}catch(e){
 
-        // Create table
-        const table = document.createElement('table');
-        table.classList.add('table');
-
-        // Create table head
-        const thead = document.createElement('thead');
-        const headRow = document.createElement('tr');
-        const headColumns = ['Problem Name', 'Date'];
-
-        headColumns.forEach(column => {
-        const th = document.createElement('th');
-        th.textContent = column;
-        headRow.appendChild(th);
-        });
-
-        thead.appendChild(headRow);
-        table.appendChild(thead);
-
-        // Create table body
-        const tbody = document.createElement('tbody');
-
-        // const rowData = [
-        // [1, 'Cy Ganderton', 'Quality Control Specialist', 'Blue'],
-        // [2, 'Hart Hagerty', 'Desktop Support Technician', 'Purple'],
-        // [3, 'Brice Swyre', 'Tax Accountant', 'Red']
-        // ];
-        var rowData=[];
-
-        const { data, error } = await supabase
-        .from('users')
-        .select()
-        .eq('uuid', SESSION_USER.user.id)
-    
-        var DA=data[0].solved_problem;
-        // console.log("len "+DA.length);
-        for(let i=0;i<DA.length;i++)
-        {   
-            rowData[i]=[];
-            rowData[i][0]=DA[i].id;
-            rowData[i][1]=DA[i].date.slice(0,10);
-        }
-        // console.log(SESSION_USER.user.id);
-        console.log("check "+rowData);
-
-        rowData.forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach((cellData, index) => {
-            const cell = index === 0 ? document.createElement('th') : document.createElement('td');
-            cell.textContent = cellData;
-            tr.appendChild(cell);
-        });
-        tbody.appendChild(tr);
-        });
-
-        table.appendChild(tbody);
-
-        // Append table to parent div
-        div.appendChild(table);
-
-        // Append parent div to div with id "allSubs"
-        const allSubsDiv = document.getElementById('solvedQs');
-        if (allSubsDiv) {
-        allSubsDiv.appendChild(div);
-        } else {
-        console.error("Div with id 'allSubs' not found.");
-        }
+    }
+  }
+	onMount(async (promise) => {
+    fder("1");
     });
+  $:fder(chartCanvas,chartLabels,SESSION_USER,chartValues,USER_INFO,POINT_INFO,chartCanvas2)
 
 </script>
 <NavBar></NavBar>
 {#if session}
-<div style="display: flex;flex-direction:row;">
-<div class="stats stats-vertical lg:stats-horizontal shadow">
-  
-    <div class="stat">
-      <div class="stat-title">Accepted Problems</div>
-      <div class="stat-value">{problem_solved}</div>
-      <div class="stat-desc">Start - {new Date().toLocaleDateString()}</div>
+<div style="display:flex" id="top-level">
+<div class="flex" style="height:100%;flex-direction:column">
+    <div class="text-lg m-5 font-bold card w-96 bg-cover bg-[url('https://img.freepik.com/premium-vector/abstract-fluid-background-with-blue-yellow-color-vector-illustration_500223-973.jpg')] shadow-xl background-size: cover">
+        <div class="card-body">
+          <h2 class="card-title" style="text-shadow: 0 0 3px black">Roadmap</h2>
+          <p style="text-shadow: 0 0 3px black">Follow our curated sequence of topics and problems to master your skills</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary" on:click={function(){goto("/roadmap")}}>Go.</button>
+          </div>
+        </div>
+      </div>
+
+    <div class="text-lg m-5 font-bold card w-96 bg-cover bg-[url('https://static.vecteezy.com/system/resources/previews/012/672/269/non_2x/abstract-background-with-light-wave-blurred-backdrop-illustration-for-your-graphic-design-banner-wallpaper-template-or-poster-vector.jpg')] shadow-xl background-size: cover">
+      <div class="card-body">
+        <h2 class="card-title" style="text-shadow: 0 0 3px black">Compete</h2>
+        <p style="text-shadow: 0 0 3px black">Choose from a wide range of problem categories and compete with others</p>
+        <div class="card-actions justify-end">
+          <button class="btn btn-primary" on:click={function(){goto("/1v1")}}>Go.</button>
+        </div>
+      </div>
     </div>
-    
-    <div class="stat">
-      <div class="stat-title">Total Submissions</div>
-      <div class="stat-value">{POINT_INFO.total_sub}</div>
-      <div class="stat-desc">↗︎ 400 (22%)</div>
-    </div>
-    
-    <div class="stat">
-      <div class="stat-title">Total Wrong Submissions</div>
-      <div class="stat-value">{POINT_INFO.total_wa}</div>
-      <div class="stat-desc">↘︎ 90 (14%)</div>
-    </div>
+    <div style="margin-top:20px;margin-right:20px;margin-bottom:20px;margin-left:20px;">
+      <canvas bind:this={chartCanvas2} id="myChart2"></canvas>
+      <center>Submission Distribution</center>
+  </div>
     
   </div>
-    <div style="width:30vw;height:30vh">
-        <canvas style="width:10vw;height:10vh" bind:this={chartCanvas} id="myChart"></canvas>
+
+<div style="display:flex flex-direction:column;width:80vw" id="sub-level">
+    <div style="width:60vw" class="stats stats-horizontal lg:stats-horizontal shadow m-5 bg-cover bg-[url('https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjEwMTYtYy0wOF8xLWtzaDZtemEzLmpwZw.jpg')] background-size:cover">
+  
+        <div class="stat ">
+          <div class="stat-title">Accepted Problems</div>
+          <div class="stat-value">{problem_solved}</div>
+          <div class="stat-desc">Start - {new Date().toLocaleDateString()}</div>
+        </div>
+        
+        <div class="stat">
+          <div class="stat-title">Accepted Submissions</div>
+          <div class="stat-value">{POINT_INFO.accepted_count}</div>
+          <!-- <div class="stat-desc">↗︎ 400 (22%)</div> -->
+        </div>
+        
+        <div class="stat">
+          <div class="stat-title">Total WA Submissions</div>
+          <div class="stat-value">{POINT_INFO.wa_count+POINT_INFO.re_count+POINT_INFO.ce_count+POINT_INFO.tle_count}</div>
+          <!-- <div class="stat-desc">↘︎ 90 (14%)</div> -->
+        </div>
+        
+    </div>
+    <div role="tablist" class="tabs tabs-lifted tabs-lg" style="margin-top:20px;margin-right:20px;margin-bottom:20px;margin-left:20px;">
+        <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Solved Recently" checked />
+        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6" id="solvedQs">
+          <table class="table" style="font-size:20px;">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Problem ID</th>
+                <th>Date</th>
+                <th>Submission ID</th>
+              </tr>
+            </thead>
+            <tbody>
+          {#if USER_INFO?.solved_problem != undefined}
+            {#each {length:Math.min(USER_INFO?.solved_problem.length,10)} as _ ,i }
+            <tr>
+              <td>{i+1}</td>
+              <td ><a href = {"/problem/"+USER_INFO?.solved_problem[USER_INFO?.solved_problem.length-i-1].id}>Problem {USER_INFO?.solved_problem[USER_INFO?.solved_problem.length-i-1].id}</a></td>
+              <td >{USER_INFO?.solved_problem[USER_INFO?.solved_problem.length-i-1].date}</td>
+              <td><a href = {"/submission/"+USER_INFO?.solved_problem[USER_INFO?.solved_problem.length-i-1].subID}>Submission {USER_INFO?.solved_problem[USER_INFO?.solved_problem.length-i-1].subID}</a></td>
+            </tr>
+            {/each}
+          {/if}
+          </tbody>
+          </table>
+        </div>
+<!--         
+        <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Wrong" />
+        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">Tab content 3</div> -->
+    </div>
+    
+    <div style="margin-top:20px;margin-right:20px;margin-bottom:20px;margin-left:20px;">
+        <canvas bind:this={chartCanvas} id="myChart"></canvas>
         <center>Growth of Points</center>
     </div>
+    
+
+</div>
 </div>
 
-<div role="tablist" class="tabs tabs-lifted tabs-lg">
-    <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="All" />
-    <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">Tab content 1</div>
-  
-    <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Solved" checked />
-    <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6" id="solvedQs"></div>
-  
-    <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Wrong" />
-    <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">Tab content 3</div>
-  </div>
+
 {:else}
     
 {/if}

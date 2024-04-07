@@ -2,6 +2,7 @@
     import Workspace from "../../../components/Workspace.svelte";
     import NavBar from "../../../components/NavBar.svelte";
     import supabase from "$lib/db";
+    import { toast } from '@zerodevx/svelte-toast'
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import {
@@ -37,7 +38,7 @@
             playInfo.user_1 != SESSION_USER.user.id &&
             playInfo.user_2 != SESSION_USER.user.id
         ) {
-            alert("You Cannot Participate in this 1v1!");
+            toast.push("You Cannot Participate in this 1v1!");
         } else if (playInfo.session_status == "ended") {
             let b = "";
             if (
@@ -53,10 +54,12 @@
             } else {
                 b += "Your opponent has won.";
             }
-            alert("This 1v1 has ended." + b);
+            toast.push("This 1v1 has ended." + b);
             goto("/1v1/");
-        } else if (playInfo.session_status == "timeout") {
-            alert("This 1v1 has ended. Neither player won.");
+        } else if (playInfo.session_status == "resigned"){
+            
+        }else if (playInfo.session_status == "timeout") {
+            toast.push("This 1v1 has ended. Neither player won.");
             goto("/1v1/");
         } else {
             console.log(timerInterval);
@@ -108,15 +111,30 @@
             )
             .subscribe();
     });
+    // onDestroy(){
+    //     giveUp()
+    // }
+    async function giveUp(){
+        let winner = ""
+        let loser = ""
+        if (playInfo_.user_1==SESSION_USER.user.id){
+            winner = playInfo_.user_2;
+            loser = playInfo_.user_1;
+        }else{
+            winner=playInfo_.user_1;
+            loser = playInfo_.user_2;
+        }
+        const {data, error} = await supabase.rpc('handle_user_points',{one_id:playID})
+    }
 </script>
-
 <NavBar></NavBar>
-<div id="play_1v1">
-    <span
-        ><span class="countdown">
-            <span style={"--value:" + (countdowntimer/60)%60}/>m<span style={"--value:" + countdowntimer%60}/>m
-        </span></span
-    >
+<div id="play_1v1" class = "bg-neutral flex items-center justify-between flex-row" style="">
+        <span>Player {playInfo_?.user_1_info}</span>
+        <span class="countdown text-xl">
+            <span style={"--value:" + (countdowntimer/60)%60}/>m&nbsp;<span style={"--value:" + countdowntimer%60}/>s
+        </span>
+        <button class = "btn btn-primary" on:click={giveUp}>Give Up!</button>
+        <span>Player {playInfo_?.user_2_info}</span>
 </div>
 <Workspace
     problemID={playInfo_?.problem_id}

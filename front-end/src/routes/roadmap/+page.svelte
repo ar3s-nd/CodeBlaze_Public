@@ -10,112 +10,96 @@
   let roadmapArray = [
   {
     'title':'Time Complexity',
-    'tag':'1',
     'description':'How to calculate/predict Time complexity of a given algorithm?',
     'difficulty':'Beginner',
     'problem_set':'-1'
   },
   {
     'title':'Sorting and Binary Search',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Beginner',
-    'problem_set':'-1'
+    'problem_set':'3'
   },
   {
     'title':'Two Pointers and Sliding Window',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Beginner',
-    'problem_set':'-1'
+    'problem_set':'4'
   },
   {
     'title':'Recursions',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Beginner',
     'problem_set':'-1'
   },
   {
     'title':'Applications of Merge Sort and Quick Sort',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Hashing',
-    'tag':'1',
     'description':'Storing Items in a Smaller Space',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Greedy Algorithms',
-    'tag':'1',
     'description':'Storing Items in a Smaller Space',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Math and Implementation',
-    'tag':'1',
     'description':'Storing Items in a Smaller Space',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Dynamic Programming',
-    'tag':'1',
     'description':'Storing Items in a Smaller Space',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Linked Lists',
-    'tag':'1',
     'description':'Data Structures',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Stacks and Queues',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Binary Trees, Binary Heaps, and Fibonacci Heaps',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Hardcore',
     'problem_set':'-1'
   },
   {
     'title':'Segment Trees',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Binary Index Trees',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Binary Search Trees and AVL Trees',
-    'tag':'1',
     'description':'Various Basic Searching and Sorting Algorithms',
     'difficulty':'Intermediate',
     'problem_set':'-1'
   },
   {
     'title':'Coming Soon.',
-    'tag':'1',
     'description':'Many of the roadmap problems sets are incomplete and are being curated. Please wait.',
     'difficulty':'Intermediate',
     'problem_set':'-1'
@@ -124,7 +108,7 @@
 </script>
 <NavBar></NavBar>
 <center><span style="font-size:32px;font-weight:bold">Roadmap</span></center>
-<ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+<ul style="background-image: linear-gradient(45deg, #00A6B751, #1f2937);" class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
   {#each roadmapArray as set_ ,i(i)}
     <li>
       <div class="timeline-middle">
@@ -132,21 +116,21 @@
       </div>
       <div class={i%2==0?"timeline-start md:text-end mb-10":"timeline-end mb-10"}>
         <time class="font-mono italic">{i+1}</time>
-        <div class="card w-96 bg-base-100 shadow-xl">
-          <div class="card-body bg-cover bg-center">
-            <h2 style="gap: 0.5rem/* 8px */;font-size: 1.25rem/* 20px */;line-height: 1.75rem/* 28px */;font-weight: 600;">
+        <div class="card w-96 bg-base-100 shadow-xl text-black"id="info_card">
+          <div class="card-body flex justify-evenly" style="background-image: url('https://img.freepik.com/free-vector/minimalistic-style-abstract-blurred-yellow-gradient-banner-vector_1017-49017.jpg');">
+            <h2 style="text-align:center gap: 0.5rem/* 8px */;font-size: 1.25rem/* 20px */;line-height: 1.75rem/* 28px */;font-weight: 600;">
               {set_.title}
             </h2>
             <p>{set_.description}</p>
             <div class="card-actions justify-end">
-              <div class="badge badge-outline badge-primary">{set_.difficulty}</div>
+              <div class="badge badge-outline badge-base-100 text-indigo-950">{set_.difficulty}</div>
               {#if set_.problem_set==-1}
-                <div class="badge badge-outline badge-primary">In Development</div>
+                <div class="badge badge-outline badge-base-100">In Development</div>
               {/if}
             </div>
             <div class="flex justify-evenly">
-              <button class="btn btn-primary w-2/5 margin-2" on:click={function(){goto("/problem_set/"+set_.problem_set)}}>Learn</button>
-              <button class="btn btn-primary w-2/5 margin-2" on:click={function(){goto("/1v1")}}>Compete</button>
+              <button class="btn btn-primary w-3/5 margin-2 shadow-md shadow-black" on:click={function(){goto("/problem_set/"+set_.problem_set)}}>Learn</button>
+              <!-- <button class="btn btn-primary w-2/5 margin-2 shadow-md shadow-black" on:click={function(){goto("/1v1")}}>Compete</button> -->
             </div>
           </div>
         </div>
@@ -155,3 +139,19 @@
     </li>
   {/each}
 </ul>
+
+<style>
+  #info_card
+  {
+    /* width: 200px;
+    height: 200px;
+    background-color: lightblue; */
+    transition: transform 0.2s ease;
+    overflow: hidden;
+    position: relative;
+  }
+  #info_card:hover
+  {
+    transform: scale(1.05);
+  }
+</style>

@@ -202,7 +202,7 @@ data = {
     'ex_status': '', 
     'runner_output': {}, 
     'code_lang': 'Python', 
-    'user': None, 
+    'user_id': None, 
     'problemID': None,
     'input': '',   
     'answer': '3', 
@@ -269,8 +269,9 @@ def worker3(comQueue):
         response = supabase.table('submissions').update({'ex_status':"COMPLETE","runner_output":output['runner_output']}).eq("id",str(output["id"])).execute()
         if (output['runner_output']['verdict']=="Accepted"):
             if (output['one_v_oneID']!=-1):
-                response4 = supabase.rpc('update_1v1_row',{"winner_":output['user'],"id_":output['one_v_oneID']}).execute()
-            response2 = supabase.table('users').select("*").eq("uuid",output['user']).execute()
+                response4 = supabase.rpc('update_1v1_row',{"winner_":output['user_id'],"id_":output['one_v_oneID']}).execute()
+                response5= supabase.rpc('handle_user_points',{"one_id":output['one_v_oneID']})
+            response2 = supabase.table('users').select("*").eq("uuid",output['user_id']).execute()
             u_solved_problems = response2.data[0]['solved_problem']
             print(u_solved_problems)
             flag = 0
@@ -280,7 +281,7 @@ def worker3(comQueue):
                     break
             if (flag==0):
                 u_solved_problems.append({'id':output['problemID'],'date':datetime.now().strftime("%d/%m/%Y %H:%M:%S"),'points':1,'subID':output['id']})
-                response = supabase.table('users').update({'solved_problem':u_solved_problems,'points':response2.data[0]['points']+1}).eq("uuid",output["user"]).execute()
+                response = supabase.table('users').update({'solved_problem':u_solved_problems,'points':response2.data[0]['points']+1}).eq("uuid",output["user_id"]).execute()
         print("Submitting",response)
 
 t1 = Thread(target=worker1, args=(submissionQueue, ))

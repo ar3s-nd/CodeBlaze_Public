@@ -1,8 +1,12 @@
 <script>
     import { goto } from '$app/navigation';
     import {onMount} from "svelte";
+    import { Application } from '@splinetool/runtime';
 let exmaple = [];
 onMount(async()=>{
+const canvas = document.getElementById('canvas3d');
+const app = new Application(canvas);
+app.load('https://prod.spline.design/NGaxQTs2AbwUvQQC/scene.splinecode');
 
 })
 </script>
@@ -31,9 +35,9 @@ onMount(async()=>{
     </div>
   </div>
 <div class="hero min-h-screen bg-base-400">
-  <div class="hero-content flex-col lg:flex-row-reverse">
-    <div class = "size-1/2">
-      <img class = "size-100" src = "/code.gif" >
+  <div class="hero-content flex-col lg:flex-row-reverse" style="width:100%;">
+    <div style="width:50%; height:100%;">
+      <canvas id = "canvas3d"></canvas>
     </div>
     <div>
       <h1 class="text-5xl font-bold">A better way to prepare for coding interviews.</h1>

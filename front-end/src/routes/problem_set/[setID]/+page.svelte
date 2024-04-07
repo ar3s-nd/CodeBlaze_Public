@@ -3,9 +3,25 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import supabase from "$lib/db"
+    import {
+        toastList,
+        authHandlers,
+        userInfo,
+    } from "$lib/stores";
     let setID = $page.params.setID;
     let title,premium,problems = [];
-
+    let USER_INFO;
+    let solved_probs = [];
+    function u(){
+      for (let i = 0;i<USER_INFO?.solved_problem?.length;i++){
+        solved_probs.push(USER_INFO?.solved_problem[i]?.id)
+      }
+      console.log(solved_probs)
+    }
+    $:u(USER_INFO)
+    const unsubscribe2 = userInfo.subscribe((value) => {
+        USER_INFO = value;
+    });
     onMount(async () => {
         let { data, error } = await supabase
                             .from("problem_sets")
@@ -34,7 +50,16 @@
         <tbody>
           {#each problems as item (item.id)}
             <tr>
-              <td></td>
+              <td>{#if solved_probs.includes(parseInt(item.pID))}
+                    <input type="checkbox" checked="checked" disabled class="checkbox" />
+                  {:else if item.type == "description"}
+                    <input type="checkbox" class="checkbox" />
+                  {:else if item.source != "Codeblaze"}
+                    <input type="checkbox" class="checkbox" />
+                  {:else}
+                    <input type="checkbox" disabled class="checkbox" />
+                  {/if}
+              </td>
               <td>{item.id}</td>
               <td><a style="font-weight:bold" target="_blank" href = {item.source=="Codeblaze"?"/problem/"+item.pID:item.link}>{item.title}</a></td>
               <td>

@@ -26,7 +26,7 @@ async function generateID()
       let p = data.id;
       let k =await supabase
           .from('t_1v1')
-          .insert({'user_1': SESSION_USER.user.id,'problem_id': p,time:time_alotted})
+          .insert({'user_1': SESSION_USER.user.id,'problem_id': p,time:time_alotted,'user_1_name':USER_INFO.name})
           .select('id');
       private_id_created = k.data[0].id;
           const channel=supabase     
@@ -67,7 +67,7 @@ async function generateID()
       {
           const {data, error} = await supabase
               .from('t_1v1')
-              .update({user_2: SESSION_USER.user.id,session_status: "started",started_at:"NOW()"})
+              .update({user_2: SESSION_USER.user.id,session_status: "started",started_at:"NOW()",'user_2_name':USER_INFO.name})
               .eq('id',private_id)
               .select()
               console.log("info "+data[0].session_status);
@@ -85,36 +85,36 @@ async function generateID()
 
 <NavBar></NavBar>
 <body>
-  <div class="flex flex-row items-center justify-center">
-    <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+  <div class="flex flex-row items-center justify-center text-black font-bold" style="margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
+    <div class="card shrink-0 w-full max-w-sm bg-base-100 bg-cover bg-[url('https://img.freepik.com/premium-photo/beautiful-blue-background-that-shades-from-light-dark-concept-sky-air-sea_71793-40.jpg')]" style="margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
       <form class="card-body">
         Join Contest
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Join Code</span>
+            <span class="label-text text-black">Join Code</span>
           </label>
-          <input type="text" id="textInput" class="input input-bordered" required bind:value={private_id}/>
+          <input type="text" id="textInput" class="input input-ghost border-black" required bind:value={private_id}/>
         </div>
         <div class="form-control mt-6">
-          <button class="btn btn-active btn-primary" on:click={joinContest}>Join Contest</button>
+          <button class="btn btn-warning shadow-md shadow-black btn-primary" on:click={joinContest}>Join Contest</button>
         </div>
       </form>
       
     </div>
-    <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+    <div class="card shrink-0 w-full max-w-sm bg-base-100 bg-cover bg-[url('https://img.freepik.com/premium-photo/beautiful-blue-background-that-shades-from-light-dark-concept-sky-air-sea_71793-40.jpg')]" style="margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
       <form class="card-body">
         Host Contest
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Join Code</span>
+            <span class="label-text text-black">Join Code</span>
           </label>
-          <input type="text" readonly class="input input-bordered" required bind:value={private_id_created}/>
+          <input type="text" readonly class="input input-ghost border-black" required bind:value={private_id_created}/>
         </div>
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Time (mins)</span>
+            <span class="label-text text-black">Time (mins)</span>
           </label>
-          <select type="text" readonly class="input input-bordered" required bind:value={time_alotted}>
+          <select type="text" class="input input-ghost border-black" required bind:value={time_alotted}>
             <option value="20">20sec</option>
             <option value="{5*60}">5</option>
             <option value="{10*60}">10</option>
@@ -123,7 +123,7 @@ async function generateID()
           </select>
         </div>
         <div class="form-control mt-6">
-          <button class="btn btn-active btn-primary" on:click={generateID}>Host Contest</button>
+          <button class="btn btn-warning shadow-md shadow-black btn-primary" on:click={generateID}>Host Contest</button>
         </div>
         {#if private_id_created!=null}
           Waiting for Team-mate to join....
