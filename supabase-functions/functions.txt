@@ -1,0 +1,176 @@
+create
+or replace function get_matchmaking_data (user_ uuid, t bigint, tag_ text) returns json security definer set search_path = public as $$
+
+DECLARE
+  row_count integer;
+  new_id bigint;
+  new_1v1_id bigint;
+  curr_u_points bigint;
+  user_1_name text;
+  user_1_uid uuid;
+  user_2_name text;
+  user_2_uid uuid;
+  pID bigint;
+  matID bigint;
+  match_id bigint; 
+  join_match boolean;
+BEGIN
+  SELECT points INTO curr_u_points FROM users WHERE uuid = user_;
+  user_1_uid := user_;
+  -- raise exception 'logging message: % % % % % % % % % %', row_count,new_id,new_1v1_id,curr_u_points,user_1_name text,user_1_uid,user_2_name,user_2_uid,pID,matID;
+  SELECT name INTO user_1_name FROM users WHERE uuid = user_;
+  SELECT COUNT(*) INTO row_count
+  FROM matchmaking
+  WHERE (user_points BETWEEN (curr_u_points-100) AND (curr_u_points+100))
+  AND matchid = -1 AND time=t AND tag = tag_;
+  IF row_count = 0 THEN
+    INSERT INTO matchmaking (user_id,user_name, user_points, matchid,time,tag)
+    VALUES (user_,user_1_name, curr_u_points, -1,t,tag_)
+    RETURNING id INTO new_id;
+    join_match := false;
+  ELSE
+    SELECT id,user_id,user_name INTO matID,user_2_uid,user_2_name
+    FROM matchmaking
+    WHERE user_points BETWEEN (curr_u_points-100) AND (curr_u_points+100)
+    AND matchid = -1 AND time=t AND tag = tag_ order by random() limit 1;
+    IF tag_ = '-1' THEN
+      select id into pID from problems order by random() limit 1;
+    ELSE
+      select id into pID from problems WHERE tag_ = ANY(tags) order by random() limit 1;
+    END IF;
+    INSERT INTO t_1v1 (user_1, user_2, problem_id, time, session_status, contest_type, started_at, user_1_name,user_2_name)
+    VALUES (user_1_uid,user_2_uid,pID,t,'started','public','NOW()',user_1_name,user_2_name)
+    RETURNING id INTO match_id;
+
+
+    UPDATE matchmaking SET matchid = match_id WHERE id = matID;
+    join_match:=true;
+  END IF;
+  RETURN json_build_object(
+        'match_id', match_id,
+        'join_match', join_match,
+        'mat_id', new_id
+    );
+END;
+
+$$ language plpgsql;
+
+create
+or replace function get_accepted_count (user_id_ uuid) returns bigint as $$
+BEGIN
+    RETURN (SELECT COUNT(*) FROM submissions WHERE ((user_id = user_id_) AND (runner_output->>'verdict' = 'Accepted')));
+END;
+$$ language plpgsql;
+create
+or replace function get_wa_count (user_id_ uuid) returns bigint as $$
+BEGIN
+    RETURN (SELECT COUNT(*) FROM submissions WHERE ((user_id = user_id_) AND (runner_output->>'verdict' = 'Wrong Answer')));
+END;
+$$ language plpgsql;
+create
+or replace function get_tle_count (user_id_ uuid) returns bigint as $$
+BEGIN
+    RETURN (SELECT COUNT(*) FROM submissions WHERE ((user_id = user_id_) AND (runner_output->>'verdict' = 'Time Limit Exceeded')));
+END;
+$$ language plpgsql;
+create
+or replace function get_ce_count (user_id_ uuid) returns bigint as $$
+BEGIN
+    RETURN (SELECT COUNT(*) FROM submissions WHERE ((user_id = user_id_) AND (runner_output->>'verdict' = 'Compilation Error')));
+END;
+$$ language plpgsql;
+create
+or replace function get_re_count (user_id_ uuid) returns bigint as $$
+BEGIN
+    RETURN (SELECT COUNT(*) FROM submissions WHERE ((user_id = user_id_) AND (runner_output->>'verdict' = 'Runtime Error')));
+END;
+$$ language plpgsql;
+create
+or replace function get_all_count (user_id_ uuid) returns json as $$
+DECLARE
+    accepted_count bigint;
+    wa_count bigint;
+    tle_count bigint;
+    ce_count bigint;
+    re_count bigint;
+BEGIN
+    accepted_count := get_accepted_count(user_id_);
+    wa_count := get_wa_count(user_id_);
+    tle_count := get_tle_count(user_id_);
+    ce_count := get_ce_count(user_id_);
+    re_count := get_re_count(user_id_);
+    RETURN json_build_object(
+        'accepted_count', accepted_count,
+        'wa_count', wa_count,
+        'tle_count', tle_count,
+        'ce_count', ce_count,
+        're_count', re_count
+    );
+END;
+$$ language plpgsql;
+
+create
+or replace function update_1v1_row (id_ bigint, winner_ uuid) returns void as $$
+begin
+    -- if ((SELECT winner FROM t_1v1 WHERE id = id_) is not null) then
+        UPDATE t_1v1 SET winner = winner_, session_status = 'ended' WHERE id = id_;
+    -- end if;
+end;
+$$ language plpgsql;
+
+create or replace function get_random_problem (tag_ text) returns jsonb as $$
+begin
+IF tag_ = '-1' then
+  return '{"id":' || ( select id from problems order by random() limit 1 ) || '}' ;
+ELSE
+  return '{"id":' || ( select id from problems WHERE tag_ = ANY(tags) order by random() limit 1 ) || '}' ;
+END IF;
+end;
+$$ language plpgsql;
+
+create 
+or replace function get_user_points () return Table(name_ text point_ bigint) security definer set search_path = public as $$
+
+begin
+return query
+select
+  name,
+  points
+from
+  users
+order by
+  points desc limit 10;
+end;
+$$ language plpgsql;
+
+create
+or replace function handle_user_points (one_id bigint) returns void security definer set search_path = public as $$
+
+DECLARE
+    x bigint;
+    R1 bigint;
+    R2 bigint;
+    u_1 uuid;
+    u_2 uuid;
+    win_ uuid;
+    loser uuid;
+BEGIN
+    SELECT user_1,user_2,winner INTO u_1,u_2,win_ FROM t_1v1 where id = one_id;
+    -- SELECT user_2 INTO u_2 FROM t_1v1 where id = one_id;
+    -- SELECT winner INTO win FROM t_1v1 where id = one_id;
+    IF u_1 = win_ THEN
+        loser := u_2;
+    ELSE
+        loser := u_1;
+    END IF;
+    SELECT points INTO R1 FROM users WHERE uuid = win_;
+    SELECT points INTO R2 FROM users WHERE uuid = loser;
+    SELECT ROUND(10/(1 + 100^((R1 - R2)/400))) INTO x;
+    UPDATE t_1v1 SET winner_points = x WHERE id = one_id;
+    -- raise exception 'logging message: % % % % % % %', x,R1,R2,u_1,u_2,win_,loser;
+    UPDATE users SET points = (points + x) WHERE uuid = win_;
+    UPDATE users SET points = (points - x) WHERE uuid = loser;
+    
+END;
+$$ language plpgsql;
+
