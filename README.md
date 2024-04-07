@@ -1,10 +1,7 @@
 
 # ![Codeblaze](https://github.com/ar3s-nd/CodeBlaze_Public/assets/64828294/b65b474a-943a-4135-81e9-1d444ead0698)
 An All-Feature integrated platform where coders across the learning curve, can learn, hone their skills, and test themselves.  
-
-
-
-
+🌐 Live at: [CodeBlaze](https://code-blaze.netlify.app)
 ## Tech Stack
 ![Svelte](https://img.shields.io/badge/svelte-%23f1413d.svg?style=for-the-badge&logo=svelte&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
@@ -14,7 +11,6 @@ An All-Feature integrated platform where coders across the learning curve, can l
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Netlify](https://img.shields.io/badge/netlify-%23000000.svg?style=for-the-badge&logo=netlify&logoColor=#00C7B7)
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-
 
 ## Problem Statement
 The absence of an online coding platform featuring 1v1 duels deprives learners of a dynamic environment where they can apply their coding skills under time constraints, hindering their ability to experience real-time problem-solving and competitive learning opportunities.
@@ -70,3 +66,9 @@ VITE_SUPA_ANON_PUB=anon api key
 2.	Live intractability between competitors in 1v1, through chat, powerups, etc
 3.	Include hints for each problem, which progressively reveal the solution.
 4.	Give the user options to chose from a vide range of themes on the website.
+
+## Contributors
+With ❤️ By Team "Muralidhara Fan Boys"
+- Pramatha V Rao
+- R Ricky Roger
+- Navaneeth D
