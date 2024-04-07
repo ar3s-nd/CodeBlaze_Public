@@ -2,9 +2,9 @@
   import supabase from "$lib/db"
   import {goto} from "$app/navigation"
   import {session_user,authHandlers} from "$lib/stores"
-  let email,password;
+  let email,password,err;
   let onSignIn = async function(){
-    authHandlers.login(email,password)
+    err = await authHandlers.login(email,password)
   }
 </script>
 
@@ -30,6 +30,9 @@
       <div class="form-control mt-6">
         <button class="btn btn-primary" on:click={onSignIn}>Login</button>
       </div>
+      {#if err!=undefined}
+        <span>Error: {err}</span>
+      {/if}
     </form>
   </div>
 </div>

@@ -3,14 +3,15 @@
   import NavBar from "../../../components/NavBar.svelte";
   import supabase from "$lib/db"
   import { page } from "$app/stores";
-import {goto} from "$app/navigation"
+import {goto,invalidateAll} from "$app/navigation"
 import {
       toastList,
       authHandlers,
       session_user,
       userInfo,
   } from "$lib/stores";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
+  invalidateAll();
   let SESSION_USER, USER_INFO, user_sub;
   const unsubscribe = session_user.subscribe((value) => {
       SESSION_USER = value;
@@ -18,10 +19,11 @@ import {
   const unsubscribe2 = userInfo.subscribe((value) => {
       USER_INFO = value;
   });
-
+let p_tag = "-1"
+let channel_p;
 async function generateID()
   {
-      let {data,error} = await supabase.rpc('get_random_problem')
+      let {data,error} = await supabase.rpc('get_random_problem',{tag_:p_tag})
       console.log(data,error)
       let p = data.id;
       let k =await supabase
@@ -29,7 +31,7 @@ async function generateID()
           .insert({'user_1': SESSION_USER.user.id,'problem_id': p,time:time_alotted,'user_1_name':USER_INFO.name})
           .select('id');
       private_id_created = k.data[0].id;
-          const channel=supabase     
+          channel_p=supabase     
               .channel('fbwifwofnwo'+SESSION_USER.user.id)
               .on(
                   'postgres_changes',
@@ -49,7 +51,14 @@ async function generateID()
       
 
   }
-
+  onDestroy(()=>{
+    try{
+      supabase.removeChannel('fbwifwofnwo'+SESSION_USER.user.id)
+      channel_p.unsubscribe()
+    }catch(e){
+                
+    }
+  })
   async function joinContest()
   {
       let { data, error } = await supabase
@@ -85,7 +94,7 @@ async function generateID()
 
 <NavBar></NavBar>
 <body>
-  <div class="flex flex-row items-center justify-center text-black font-bold" style="margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
+  <div class="flex flex-row flex-wrap items-center justify-center text-black font-bold" style="margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
     <div class="card shrink-0 w-full max-w-sm bg-base-100 bg-cover bg-[url('https://img.freepik.com/premium-photo/beautiful-blue-background-that-shades-from-light-dark-concept-sky-air-sea_71793-40.jpg')]" style="margin-top: 10px;margin-right: 10px;margin-bottom: 10px;margin-left: 10px;">
       <form class="card-body">
         Join Contest
@@ -120,6 +129,19 @@ async function generateID()
             <option value="{10*60}">10</option>
             <option value="{15*60}">15</option>
             <option value="{20*60}">20</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text text-black">Tags</span>
+          </label>
+          <select type="text" class="input input-ghost border-black" required bind:value={p_tag}>
+            <option value="-1">Random</option>
+            <option value="Arrays">Arrays</option>
+            <option value="Two Pointers">Two Pointers</option>
+            <option value="Sortings">Sortings</option>
+            <option value="Binary Search">Binary Search</option>
+            <option value="Dynamic Programming">Dynamic Programming</option>
           </select>
         </div>
         <div class="form-control mt-6">

@@ -2,10 +2,15 @@
   import supabase from "$lib/db"
   import {goto} from "$app/navigation"
   import {session_user,authHandlers} from "$lib/stores"
-  let email,password,c_password;
+  let email,password,c_password,err;
   let onRegister = async function(){
-    if (password==c_password && password.length>=8){
-      authHandlers.signup(email,password)
+    if (password==c_password){
+      if (password.length>=8){
+        err = await authHandlers.signup(email,password)
+      }
+      err = "Password length should be at least 8 characters. "
+    }else{
+      err = "Passwords dont match."
     }
     
   }
@@ -39,6 +44,9 @@
         <div class="form-control mt-6">
           <button class="btn btn-primary" on:click={onRegister}>Reigster</button>
         </div>
+        {#if err!=undefined}
+          <span>Error: {err}</span>
+        {/if}
       </form>
     </div>
   </div>

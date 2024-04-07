@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount,onDestroy } from "svelte";
     import supabase from "$lib/db";
 
     import {
@@ -9,7 +9,7 @@
         userInfo,
     } from "$lib/stores";
     let Monaco, editor;
-    export let problemID = 7;
+    export let problemID = -1;
     export let view_past_sub = true;
     export let view_expln = true;
     export let one_v_oneID = -1;
@@ -21,7 +21,6 @@
     const unsubscribe2 = userInfo.subscribe((value) => {
         USER_INFO = value;
     });
-
     onMount(async () => {
         let divEl = document.getElementById("editor");
         Monaco = await import("monaco-editor");
@@ -110,15 +109,22 @@
             .subscribe();
         // goto("/problem/"+data[0].id)
     }
+    onDestroy(()=>{
+    try{
+        supabase.removeChannel('sub_channel'+SESSION_USER.user.id)
+    }catch(e){
+                
+    }
+  })
 </script>
 
 <div class="workspace">
     <div
-        style="min-height:50vh"
-        class=" bg-base-300 rounded-box flex flex-row flex-nowrap p-2"
+        style="min-height:50vh;min-width:45vw;"
+        class=" bg-base-300 rounded-box flex-nowrap p-2 flex flex-col w-full lg:flex-row"
     >
-        <div
-            style="width:50vw;min-height:80vh;max-height:80vh;resize:horizontal;overflow-y:scroll;padding:10px;"
+        <div class = "grid flex-grow h-32 card bg-base-300 rounded-box"
+            style="min-height:80vh;max-height:80vh;overflow-y:scroll;padding:10px;"
             id="expl"
         >
             <div
@@ -231,12 +237,12 @@
         </div>
         <div class="divider divider-horizontal m-1"></div>
         <div
-            style="width:50vw;min-height:80vh;resize:horizontal;"
-            class="flex flex-col flex-nowrap"
+            style="min-height:80vh;"
+            class=" flex-col flex-nowrap flex-grow grid h-32 card bg-base-300 rounded-box" 
         >
-            <div id="editor" style="height: 70%;max-height:50vh"></div>
+            <div id="editor" style="height: 50vh;max-height:50vh;width:100%"></div>
             <div class="divider"></div>
-            <div id="result" style="height: 30%;max-height:50vh">
+            <div id="result" style="height: 30vh;max-height:50vh">
                 {#if sub_running == true}
                     [Note] Your code is getting executed, please wait for a few seconds. 
                 {:else if sub_status != null}

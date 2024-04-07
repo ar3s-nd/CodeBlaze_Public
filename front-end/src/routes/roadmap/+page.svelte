@@ -107,8 +107,9 @@
   ]
 </script>
 <NavBar></NavBar>
+<div style="background-image: linear-gradient(0deg, #0A6B75,#1f2937);">
 <center><span style="font-size:32px;font-weight:bold">Roadmap</span></center>
-<ul style="background-image: linear-gradient(45deg, #00A6B751, #1f2937);" class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+<ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
   {#each roadmapArray as set_ ,i(i)}
     <li>
       <div class="timeline-middle">
@@ -139,7 +140,7 @@
     </li>
   {/each}
 </ul>
-
+</div>
 <style>
   #info_card
   {
