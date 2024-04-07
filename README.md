@@ -23,7 +23,7 @@ The absence of an online coding platform featuring 1v1 duels deprives learners o
 - Graphical representation of the growth of points. 
 
 #### Roadmap (/roadmap)
-- List of subtopics/problem_sets.
+- Optimized sequence of subtopics/problem_sets for the best learning experience.
 
 #### Problem Sets (/problem_set)
 - List of documentation/ reading material, and coding problems along with their difficulty, and solved status. 
