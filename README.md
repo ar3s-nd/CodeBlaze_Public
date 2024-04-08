@@ -2,7 +2,7 @@
 # ![Codeblaze](https://github.com/ar3s-nd/CodeBlaze_Public/assets/64828294/b65b474a-943a-4135-81e9-1d444ead0698)
 An All-Feature integrated platform where coders across the learning curve, can learn, hone their skills, and test themselves.  
 🌐 Live at: [CodeBlaze](https://code-blaze.netlify.app)
-🎬 Demo at: [Youtube](https://youtu.be/x7OF-U_rfW0)
+🎬 Demo at: [Youtube](https://youtu.be/cvKVUvY-7vg)
 ## Tech Stack
 ![Svelte](https://img.shields.io/badge/svelte-%23f1413d.svg?style=for-the-badge&logo=svelte&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
